@@ -31,6 +31,7 @@
             padding:24px;
             text-align:center;
             display:inline-block;
+            min-width:320px;
         }
 
         .title{
@@ -45,7 +46,18 @@
             font-size:42px;
             font-weight:700;
             line-height:1;
-            margin-bottom:12px;
+            margin-bottom:16px;
+        }
+
+        .bmi-message{
+            background:#FFFFFF;
+            border-radius:10px;
+            padding:14px;
+            margin-bottom:16px;
+            color:#3F3A36;
+            font-size:14px;
+            line-height:1.6;
+            text-align:left;
         }
 
         .copy-btn{
@@ -80,6 +92,10 @@
             --
         </div>
 
+        <div id="bmi-message" class="bmi-message">
+            Enter height and weight to calculate BMI.
+        </div>
+
         <button class="copy-btn"
                 onclick="copyBMI(this)">
             <i class="fa-regular fa-copy"></i>
@@ -97,7 +113,7 @@ function calculateBMI(weight, height){
     const weightKg = parseFloat(weight);
     const heightM = parseFloat(height) / 100;
 
-    if(
+    if (
         isNaN(weightKg) ||
         isNaN(heightM) ||
         heightM <= 0
@@ -109,6 +125,25 @@ function calculateBMI(weight, height){
 
     document.getElementById('bmi-res').innerText =
         bmi.toFixed(1);
+
+    const msg =
+        document.getElementById('bmi-message');
+
+    if (bmi < 25) {
+
+        msg.innerHTML =
+            '<strong>BMI below 25</strong><br>Within the healthy range.';
+
+    } else if (bmi < 30) {
+
+        msg.innerHTML =
+            '<strong>BMI 25–29.9</strong><br>Overweight range; surgery is still possible — our team can talk you through it.';
+
+    } else {
+
+        msg.innerHTML =
+            '<strong>BMI 30 or above</strong><br>Above the threshold Dr Cronin operates at. We’ll support you with a plan to reach a healthy, stable weight first.';
+    }
 }
 
 function copyBMI(btn){
