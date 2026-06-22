@@ -1,62 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>BMI Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+<style>
+
 html,
 body{
     margin:0;
     padding:0;
     background:transparent;
     overflow:hidden;
-    font-family:'Inter', Arial, sans-serif;
+    font-family:'Inter', sans-serif;
 }
 
-.container{
+.bmi-wrapper{
     width:100%;
 }
 
-.bmi-card{
-    background:transparent;
-    border:none;
-    border-radius:0;
-    padding:0;
-    text-align:left;
-    width:100%;
+.bmi-header{
+    display:flex;
+    align-items:center;
+    margin-bottom:12px;
 }
 
-.title{
+.bmi-icon{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:#EEF2FF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    margin-right:12px;
+}
+
+.bmi-title{
     color:#1B3A6B;
     font-size:22px;
+    font-family:'Poppins',sans-serif;
     font-weight:600;
-    margin-bottom:12px;
-    font-family:'Poppins', sans-serif;
 }
 
 .bmi-value{
-    color:#1B3A6B;
-    font-size:48px;
+    font-size:56px;
     font-weight:700;
+    color:#1B3A6B;
     line-height:1;
+    margin-bottom:12px;
+}
+
+.bmi-status{
+    display:inline-block;
+    background:#EEF2FF;
+    color:#6D4AFF;
+    border-radius:999px;
+    padding:6px 14px;
+    font-size:13px;
+    font-weight:600;
     margin-bottom:16px;
 }
 
 .bmi-message{
     background:#F8FAFC;
-    border-radius:12px;
+    border-radius:14px;
     padding:16px;
     color:#475569;
-    font-size:15px;
     line-height:1.7;
-    margin-bottom:16px;
-}
-
-.copy-btn{
-    background:none;
-    border:none;
-    padding:0;
-    color:#6D4AFF;
     font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    font-family:'Inter', sans-serif;
 }
 
-.copy-btn:hover{
-    opacity:0.8;
+.bmi-message strong{
+    color:#334155;
 }
+
+</style>
+</head>
+
+<body>
+
+<div class="bmi-wrapper">
+
+    <div class="bmi-header">
+        <div class="bmi-icon">📊</div>
+        <div class="bmi-title">Your BMI</div>
+    </div>
+
+    <div id="bmi-res" class="bmi-value">
+        --
+    </div>
+
+    <div id="bmi-status" class="bmi-status">
+        Waiting for values
+    </div>
+
+    <div id="bmi-message" class="bmi-message">
+        Enter your height and weight above to calculate your BMI.
+    </div>
+
+</div>
+
+<script>
+
+function calculateBMI(weight,height){
+
+    const weightKg=parseFloat(weight);
+    const heightM=parseFloat(height)/100;
+
+    if(
+        isNaN(weightKg) ||
+        isNaN(heightM) ||
+        heightM<=0
+    ){
+        return;
+    }
+
+    const bmi=weightKg/(heightM*heightM);
+
+    document.getElementById('bmi-res').innerText=
+        bmi.toFixed(1);
+
+    const status=
+        document.getElementById('bmi-status');
+
+    const msg=
+        document.getElementById('bmi-message');
+
+    if(bmi < 25){
+
+        status.innerText="Healthy Range";
+
+        status.style.background="#ECFDF5";
+        status.style.color="#059669";
+
+        msg.innerHTML=
+        "<strong>Healthy BMI</strong><br>You're currently within the healthy BMI range.";
+
+    }
+    else if(bmi < 30){
+
+        status.innerText="Overweight Range";
+
+        status.style.background="#FEF3C7";
+        status.style.color="#D97706";
+
+        msg.innerHTML=
+        "<strong>BMI 25–29.9</strong><br>Your BMI falls within the overweight range. Your care team can discuss suitable treatment options with you.";
+
+    }
+    else{
+
+        status.innerText="BMI 30+";
+
+        status.style.background="#FEE2E2";
+        status.style.color="#DC2626";
+
+        msg.innerHTML=
+        "<strong>BMI 30 or Above</strong><br>Your BMI is above the threshold for surgery. We'll support you in reaching a healthy and stable weight first.";
+
+    }
+}
+
+const params=new URLSearchParams(window.location.search);
+
+const weight=params.get('weight');
+const height=params.get('height');
+
+if(weight && height){
+    calculateBMI(weight,height);
+}
+
+</script>
+
+</body>
+</html>
